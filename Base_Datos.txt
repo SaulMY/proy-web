@@ -1,0 +1,35 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS BudGet;
+USE BudGet;
+
+-- Crear la tabla de usuarios
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    type TINYINT(1) NOT NULL DEFAULT 0 -- 1 para admin, 0 para usuario normal
+);
+
+-- Crear la tabla de movimientos (ingresos/gastos)
+CREATE TABLE IF NOT EXISTS movimientos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL, -- Relación con el usuario
+    tipo ENUM('ingreso', 'gasto') NOT NULL,
+    monto DECIMAL(10,2) NOT NULL,
+    descripcion VARCHAR(255),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Borra movimientos si se elimina un usuario
+);
+
+-- Insertar usuarios de prueba con contraseñas normales
+INSERT INTO users (username, password, type) VALUES 
+('admin', 'admin', 1), 
+('Jason', '1234', 0);  
+
+-- Insertar datos de prueba para movimientos (asociados a usuarios)
+INSERT INTO movimientos (user_id, tipo, monto, descripcion) VALUES
+(1, 'ingreso', 5000.00, 'Salario de admin'),
+(1, 'gasto', 1500.00, 'Alquiler de admin'),
+(2, 'ingreso', 2000.00, 'Salario de Jason'),
+(2, 'gasto', 500.00, 'Comida de Jason'),
+(2, 'gasto', 200.00, 'Transporte de Jason');
