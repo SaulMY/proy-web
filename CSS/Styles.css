@@ -121,3 +121,8 @@ form p a:hover {
 main h2, main p {
     margin-top: 20px;
 }
+
+div{
+    text-align: center;
+    align-items: center;
+}

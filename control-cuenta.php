@@ -25,13 +25,23 @@ class sql{
     }
 
     public function sumaGastosUsuario($user_id){
-
+        $sql = "SELECT SUM(monto) AS total_gastos 
+                FROM movimientos 
+                WHERE user_id = ? AND tipo = 'gasto'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        return $result['total_gastos'] ?? 0; // Devuelve 0 si no hay gastos
     }
 
     public function balanceUsuario($user_id){
-
+        $ingresos = $this->sumaIngresosUsuario($user_id);
+        $gastos = $this->sumaGastosUsuario($user_id);
+        return $ingresos - $gastos;
     }
 
+    
 
 }
 
